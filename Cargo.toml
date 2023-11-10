@@ -1,8 +1,18 @@
-[package]
-name = "kv"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = [
+    "client",
+    "server",
+    "schemas"
+]
+resolver = "2"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+[workspace.dependencies]
+glob = "0.3.1"
+mlg = "0.1.0"
+tokio = { version = "1.34.0", features = ["full"] }
+serde = { version = "1.0.188", features = ["derive"] }
+prost = "0.12.0"
+prost-types = "0.12.0"
+tonic = "0.10.0"
+tonic-health = "0.10.0"
+anyhow = "1.0.69"
