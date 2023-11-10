@@ -35,34 +35,39 @@ impl Storage {
 
         loop {
             // Read a batch of records from the log
-            let (records, next_offset) = log.batch_read(offset, PAGINATION_SIZE).await?;
-
-            // Check if we've reached the end of the log
-            if records.is_empty() {
-                break;
-            }
-
-            // Process the records
-            for record in records {
-                // Deserialize the record
-                let operation: Operation = bincode::deserialize(&record)?;
-
-                // Apply the operation to the data
-                match operation {
-                    Operation::Put(key, value) => {
-                        data.insert(key, value);
+            match log.batch_read(offset, PAGINATION_SIZE).await {
+                Ok((records, next_offset)) => {
+                    // Check if we've reached the end of the log
+                    if records.is_empty() {
+                        break;
                     }
-                    Operation::Get(key) => {
-                        data.get(&key);
+
+                    // Process the records
+                    for record in records {
+                        // Deserialize the record
+                        let operation: Operation = bincode::deserialize(&record)?;
+
+                        // Apply the operation to the data
+                        match operation {
+                            Operation::Put(key, value) => {
+                                data.insert(key, value);
+                            }
+                            Operation::Get(key) => {
+                                data.get(&key);
+                            }
+                            Operation::Delete(key) => {
+                                data.remove(&key);
+                            }
+                        }
                     }
-                    Operation::Delete(key) => {
-                        data.remove(&key);
-                    }
+
+                    // Advance the offset
+                    offset = next_offset;
+                }
+                Err(_err) => {
+                    break;
                 }
             }
-
-            // Advance the offset
-            offset = next_offset;
         }
 
         Ok(Storage {

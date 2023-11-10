@@ -2,6 +2,7 @@ use std::sync::Arc;
 use schemas::kv::data_service_server::DataService;
 use schemas::kv::{DeleteRequest, GetRequest, GetResponse, PutRequest};
 use tonic::{Code, Request, Response, Status};
+use tracing::info;
 use wal::Storage;
 
 pub struct DataServiceImpl {
@@ -17,6 +18,7 @@ impl DataServiceImpl {
 #[tonic::async_trait]
 impl DataService for DataServiceImpl {
     async fn put(&self, request: Request<PutRequest>) -> Result<Response<()>, Status> {
+        info!("Processing PutRequest");
         let PutRequest { key, value }  = request.into_inner();
         let result = self.storage.put(key, value).await;
 
@@ -27,6 +29,7 @@ impl DataService for DataServiceImpl {
     }
 
     async fn get(&self, request: Request<GetRequest>) -> Result<Response<GetResponse>, Status> {
+        info!("Processing GetRequest");
         let GetRequest { key } = request.into_inner();
         let result = self.storage.get(key).await;
 
@@ -38,6 +41,7 @@ impl DataService for DataServiceImpl {
     }
 
     async fn delete(&self, request: Request<DeleteRequest>) -> Result<Response<()>, Status> {
+        info!("Processing DeleteRequest");
         let DeleteRequest { key } = request.into_inner();
         let result = self.storage.delete(key).await;
 
