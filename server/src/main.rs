@@ -1,10 +1,14 @@
 use crate::data::DataServiceImpl;
 use schemas::kv::data_service_server::DataServiceServer;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::sync::Arc;
 use tonic::transport::Server;
 use tracing::info;
+use wal::Storage;
 
 mod data;
+
+const WAL_FILE: &str = "kv.wal";
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -13,8 +17,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_max_level(tracing::Level::INFO)
         .init();
 
+    let storage = Arc::new(Storage::new(WAL_FILE).await?);
+
     // Create the services
-    let data_service = DataServiceServer::new(DataServiceImpl);
+    let data_service = DataServiceServer::new(DataServiceImpl::new(storage.clone()));
 
     // Start the server
     let addr = addr();

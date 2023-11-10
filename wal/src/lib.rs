@@ -16,25 +16,29 @@ enum Operation {
     Delete(Key),
 }
 
-struct Storage {
+pub struct Storage {
     data: RwLock<HashMap<Key, Value>>,
     log: Mutex<FileLog>,
 }
 
 impl Storage {
-    pub async fn new(log: FileLog) -> Result<Self> {
+
+    pub async fn new(path: &str) -> Result<Self> {
+        let log = FileLog::new(path).await?;
+        Self::new_with_log(log).await
+    }
+
+    async fn new_with_log(log: FileLog) -> Result<Self> {
         let mut data = HashMap::new();
 
         let mut offset = 0;
-        let mut done = false;
 
-        while !done {
+        loop {
             // Read a batch of records from the log
             let (records, next_offset) = log.batch_read(offset, PAGINATION_SIZE).await?;
 
             // Check if we've reached the end of the log
             if records.is_empty() {
-                done = true;
                 break;
             }
 

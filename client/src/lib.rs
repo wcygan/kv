@@ -1,4 +1,4 @@
-use std::hash::Hash;
+
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 use tonic::Status;

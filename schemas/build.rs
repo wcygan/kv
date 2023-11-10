@@ -2,7 +2,7 @@ extern crate glob;
 
 use glob::glob;
 use std::error::Error;
-use tonic_build;
+
 
 fn main() -> Result<(), Box<dyn Error>> {
     let proto_files: Vec<String> = glob("protos/**/*.proto")?
