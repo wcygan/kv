@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 
 package kv;
 
-service Database {
+service DataService {
   rpc Put(PutRequest) returns (google.protobuf.Empty);
   rpc Get(GetRequest) returns (GetResponse);
   rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
