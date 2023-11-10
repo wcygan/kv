@@ -14,7 +14,6 @@ impl Client {
         Ok(Self { client })
     }
 
-
     pub async fn get<K, V>(&mut self, key: K) -> Result<Option<V>, Status>
         where
             K: Clone + Serialize + Send + Sync + 'static,
@@ -34,7 +33,7 @@ impl Client {
         }
     }
 
-    pub async fn set<K, V>(&mut self, key: K, value: V) -> Result<(), Status>
+    pub async fn put<K, V>(&mut self, key: K, value: V) -> Result<(), Status>
         where
             K: Clone + Serialize + Send + Sync + 'static,
             V: Clone + Serialize + DeserializeOwned + Send + Sync + 'static,
