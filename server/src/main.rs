@@ -18,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Start the server
     let addr = addr();
-    info!("twote-api running on {}", addr);
+    info!("kv server running on {}", addr);
 
     // Start the server
     Server::builder()
