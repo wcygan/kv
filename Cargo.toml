@@ -2,13 +2,15 @@
 members = [
     "client",
     "server",
-    "schemas"
+    "schemas",
+    "wal"
 ]
 resolver = "2"
 
 [workspace.dependencies]
 glob = "0.3.1"
-mlg = "0.1.0"
+mlg = "0.1.1"
+bincode = "1.3.3"
 tokio = { version = "1.34.0", features = ["full"] }
 serde = { version = "1.0.188", features = ["derive"] }
 prost = "0.12.0"

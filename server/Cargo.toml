@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+wal = { path = "../wal" }
 schemas = { path = "../schemas" }
 tracing.workspace=true
 tracing-subscriber.workspace=true
