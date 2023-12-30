@@ -12,7 +12,6 @@ const PAGINATION_SIZE: usize = 128;
 #[derive(Debug, Serialize, Deserialize)]
 enum Operation {
     Put(Key, Value),
-    Get(Key),
     Delete(Key),
 }
 
@@ -22,7 +21,6 @@ pub struct Storage {
 }
 
 impl Storage {
-
     pub async fn new(path: &str) -> Result<Self> {
         let log = FileLog::new(path).await?;
         Self::new_with_log(log).await
@@ -51,9 +49,6 @@ impl Storage {
                         match operation {
                             Operation::Put(key, value) => {
                                 data.insert(key, value);
-                            }
-                            Operation::Get(key) => {
-                                data.get(&key);
                             }
                             Operation::Delete(key) => {
                                 data.remove(&key);
